@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -46,6 +47,24 @@ public class ShelterTest {
     public void notATestProofOfConcept() throws Exception {
         Session session = Mysql.getSession();
         session.beginTransaction();
+
+        //Animal animal = session.get(Animal.class, 1);
+        Shelter shelter = session.get(Shelter.class, 1);
+        shelter.setName("Happy Home");
+        Optional<Animal> fido = shelter.getAnimals().stream().filter(a -> a.getName().equals("Fido")).findFirst();
+        fido.ifPresent(f -> {
+            f.setName("Fido 2");
+        });
+
+        Optional<Animal> molly = shelter.getAnimals().stream().filter(a -> a.getName().equals("Molly")).findFirst();
+        molly.ifPresent(m -> {
+            shelter.getAnimals().remove(m);
+            session.delete(m);
+        });
+
+        Animal a4 = new Animal("Mildred", format.parse("2000-01-03"), Sex.F, "Dog", format.parse("2013-12-11"), shelter);
+        shelter.getAnimals().add(a4);
+
         session.getTransaction().commit();
         session.close();
     }
