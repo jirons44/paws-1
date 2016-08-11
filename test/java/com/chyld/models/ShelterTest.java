@@ -88,13 +88,11 @@ public class ShelterTest {
     // **************
     // *** READ ***
     // **************
-
+    
     @Test
     public void shouldGetExistingShelter() throws Exception {
         Session session = Mysql.getSession();
-        session.beginTransaction();
         Shelter shelter = session.get(Shelter.class, 1);
-        session.getTransaction().commit();
         session.close();
         assertEquals(1, shelter.getId());
         assertEquals("Furry Friends", shelter.getName());
