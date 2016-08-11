@@ -1,5 +1,6 @@
 package com.chyld.models;
 
+import com.chyld.enums.Sex;
 import com.chyld.util.Mysql;
 import org.hibernate.Session;
 import org.junit.After;
@@ -18,9 +19,16 @@ public class ShelterTest {
         Session session = Mysql.getSession();
         session.beginTransaction();
         session.createNativeQuery("set FOREIGN_KEY_CHECKS = 0").executeUpdate();
+        session.createNativeQuery("truncate table animals").executeUpdate();
         session.createNativeQuery("truncate table shelters").executeUpdate();
         session.createNativeQuery("set FOREIGN_KEY_CHECKS = 1").executeUpdate();
         Shelter shelter = new Shelter("Furry Friends", format.parse("2013-02-11"));
+        Animal a1 = new Animal("Fido", format.parse("2000-01-03"), Sex.M, "Dog", format.parse("2013-12-11"), shelter);
+        Animal a2 = new Animal("Molly", format.parse("2001-01-03"), Sex.F, "Cat", format.parse("2014-12-11"), shelter);
+        Animal a3 = new Animal("Fluffy", format.parse("2002-01-03"), Sex.F, "Cat", format.parse("2015-12-11"), shelter);
+        shelter.getAnimals().add(a1);
+        shelter.getAnimals().add(a2);
+        shelter.getAnimals().add(a3);
         session.save(shelter);
         session.getTransaction().commit();
         session.close();
@@ -28,6 +36,18 @@ public class ShelterTest {
 
     @After
     public void tearDown() throws Exception {
+    }
+
+    // ************************
+    // *** PROOF OF CONCEPT ***
+    // ************************
+
+    @Test
+    public void notATestProofOfConcept() throws Exception {
+        Session session = Mysql.getSession();
+        session.beginTransaction();
+        session.getTransaction().commit();
+        session.close();
     }
 
     // **************
@@ -114,21 +134,5 @@ public class ShelterTest {
         session.close();
         assertEquals(1, shelter.getId());
         assertEquals("Tails", shelter.getName());
-    }
-
-    // **************
-    // *** DELETE ***
-    // **************
-
-    @Test
-    public void shouldDeleteExistingShelter() throws Exception {
-        Session session = Mysql.getSession();
-        session.beginTransaction();
-        Shelter shelter = new Shelter();
-        shelter.setId(1);
-        shelter.setName("nuke it");
-        session.delete(shelter);
-        session.getTransaction().commit();
-        session.close();
     }
 }
