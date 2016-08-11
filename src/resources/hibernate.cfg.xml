@@ -11,5 +11,6 @@
         <property name="format_sql">true</property>
         <mapping class="com.chyld.models.Client"/>
         <mapping class="com.chyld.models.Shelter"/>
+        <mapping class="com.chyld.models.Animal"/>
     </session-factory>
 </hibernate-configuration>

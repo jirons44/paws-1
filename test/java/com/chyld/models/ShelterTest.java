@@ -17,7 +17,9 @@ public class ShelterTest {
     public void setUp() throws Exception {
         Session session = Mysql.getSession();
         session.beginTransaction();
+        session.createNativeQuery("set FOREIGN_KEY_CHECKS = 0").executeUpdate();
         session.createNativeQuery("truncate table shelters").executeUpdate();
+        session.createNativeQuery("set FOREIGN_KEY_CHECKS = 1").executeUpdate();
         Shelter shelter = new Shelter("Furry Friends", format.parse("2013-02-11"));
         session.save(shelter);
         session.getTransaction().commit();
@@ -88,7 +90,7 @@ public class ShelterTest {
     // **************
     // *** READ ***
     // **************
-    
+
     @Test
     public void shouldGetExistingShelter() throws Exception {
         Session session = Mysql.getSession();

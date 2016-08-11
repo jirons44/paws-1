@@ -1,7 +1,9 @@
 package com.chyld.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "shelters")
@@ -10,6 +12,7 @@ public class Shelter {
     private int id;
     private String name;
     private Date opened;
+    private List<Animal> animals;
 
     public Shelter() {
     }
@@ -17,6 +20,7 @@ public class Shelter {
     public Shelter(String name, Date opened) {
         this.name = name;
         this.opened = opened;
+        this.animals = new ArrayList<>();
     }
 
     @Id
@@ -35,4 +39,8 @@ public class Shelter {
     @Column(name = "opened")
     public Date getOpened() {return opened;}
     public void setOpened(Date opened) {this.opened = opened;}
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "shelter")
+    public List<Animal> getAnimals() {return animals;}
+    public void setAnimals(List<Animal> animals) {this.animals = animals;}
 }
